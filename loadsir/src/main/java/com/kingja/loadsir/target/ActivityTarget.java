@@ -23,14 +23,14 @@ public class ActivityTarget implements ITarget {
 
     @Override
     public LoadLayout replaceView(Object target, Callback.OnReloadListener onReloadListener) {
-        Activity activity = (Activity) target;
-        ViewGroup contentParent = activity.findViewById(android.R.id.content);
-        int childIndex = 0;
-        View oldContent = contentParent.getChildAt(childIndex);
+        final Activity activity = (Activity) target;
+        final ViewGroup contentParent = activity.findViewById(android.R.id.content);
+        final int childIndex = 0;
+        final View oldContent = contentParent.getChildAt(childIndex);
         contentParent.removeView(oldContent);
 
-        ViewGroup.LayoutParams oldLayoutParams = oldContent.getLayoutParams();
-        LoadLayout loadLayout = new LoadLayout(activity, onReloadListener);
+        final ViewGroup.LayoutParams oldLayoutParams = oldContent.getLayoutParams();
+        final LoadLayout loadLayout = new LoadLayout(activity, onReloadListener);
         loadLayout.setupSuccessLayout(new SuccessCallback(oldContent, activity,
                 onReloadListener));
         contentParent.addView(loadLayout, childIndex, oldLayoutParams);

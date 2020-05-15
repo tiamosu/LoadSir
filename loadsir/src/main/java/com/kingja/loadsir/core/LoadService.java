@@ -18,18 +18,17 @@ import java.util.List;
  * Email:kingjavip@gmail.com
  */
 public class LoadService<T> {
-    private final String TAG = getClass().getSimpleName();
     private LoadLayout loadLayout;
     private Convertor<T> convertor;
 
-    LoadService(Convertor<T> convertor,LoadLayout loadLayout,LoadSir.Builder builder) {
+    LoadService(Convertor<T> convertor, LoadLayout loadLayout, LoadSir.Builder builder) {
         this.convertor = convertor;
         this.loadLayout = loadLayout;
         initCallback(builder);
     }
 
     private void initCallback(LoadSir.Builder builder) {
-        List<Callback> callbacks = builder.getCallbacks();
+        final List<Callback> callbacks = builder.getCallbacks();
         final Class<? extends Callback> defalutCallback = builder.getDefaultCallback();
         if (callbacks != null && callbacks.size() > 0) {
             for (Callback callback : callbacks) {
@@ -44,7 +43,6 @@ public class LoadService<T> {
                 }
             }
         });
-
     }
 
     public void showSuccess() {
@@ -77,10 +75,9 @@ public class LoadService<T> {
      * @deprecated
      */
     public LinearLayout getTitleLoadLayout(Context context, ViewGroup rootView, View titleView) {
-        LinearLayout newRootView = new LinearLayout(context);
+        final LinearLayout newRootView = new LinearLayout(context);
         newRootView.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
+        final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-1, -1);
         newRootView.setLayoutParams(layoutParams);
         rootView.removeView(titleView);
         newRootView.addView(titleView);

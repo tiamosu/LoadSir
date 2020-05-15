@@ -1,7 +1,6 @@
 package com.kingja.loadsir.core;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -21,9 +20,7 @@ import androidx.annotation.NonNull;
  * Author:KingJA
  * Email:kingjavip@gmail.com
  */
-
 public class LoadLayout extends FrameLayout {
-    private final String TAG = getClass().getSimpleName();
     private Map<Class<? extends Callback>, Callback> callbacks = new HashMap<>();
     private Context context;
     private Callback.OnReloadListener onReloadListener;
@@ -43,7 +40,7 @@ public class LoadLayout extends FrameLayout {
 
     public void setupSuccessLayout(Callback callback) {
         addCallback(callback);
-        View successView = callback.getRootView();
+        final View successView = callback.getRootView();
         successView.setVisibility(View.INVISIBLE);
         addView(successView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
@@ -51,7 +48,7 @@ public class LoadLayout extends FrameLayout {
     }
 
     public void setupCallback(Callback callback) {
-        Callback cloneCallback = callback.copy();
+        final Callback cloneCallback = callback.copy();
         cloneCallback.setCallback(context, onReloadListener);
         addCallback(cloneCallback);
     }
@@ -89,21 +86,31 @@ public class LoadLayout extends FrameLayout {
             if (preCallback == status) {
                 return;
             }
-            callbacks.get(preCallback).onDetach();
+            final Callback callback;
+            if ((callback = callbacks.get(preCallback)) != null) {
+                callback.onDetach();
+            }
         }
         if (getChildCount() > 1) {
             removeViewAt(CALLBACK_CUSTOM_INDEX);
         }
         for (Class key : callbacks.keySet()) {
             if (key == status) {
-                SuccessCallback successCallback = (SuccessCallback) callbacks.get(SuccessCallback.class);
+                final SuccessCallback successCallback = (SuccessCallback) callbacks.get(SuccessCallback.class);
                 if (key == SuccessCallback.class) {
-                    successCallback.show();
+                    if (successCallback != null) {
+                        successCallback.show();
+                    }
                 } else {
-                    successCallback.showWithCallback(callbacks.get(key).getSuccessVisible());
-                    View rootView = callbacks.get(key).getRootView();
-                    addView(rootView);
-                    callbacks.get(key).onAttach(context, rootView);
+                    final Callback callback = callbacks.get(key);
+                    if (callback != null) {
+                        if (successCallback != null) {
+                            successCallback.showWithCallback(callback.getSuccessVisible());
+                        }
+                        final View rootView = callback.getRootView();
+                        addView(rootView);
+                        callback.onAttach(context, rootView);
+                    }
                 }
                 preCallback = status;
             }
@@ -116,7 +123,10 @@ public class LoadLayout extends FrameLayout {
             return;
         }
         checkCallbackExist(callback);
-        transport.order(context, callbacks.get(callback).obtainRootView());
+        final Callback tempCallback = callbacks.get(callback);
+        if (tempCallback != null) {
+            transport.order(context, tempCallback.obtainRootView(), tempCallback);
+        }
     }
 
     private void checkCallbackExist(Class<? extends Callback> callback) {

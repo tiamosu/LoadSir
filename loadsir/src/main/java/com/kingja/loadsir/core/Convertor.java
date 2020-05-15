@@ -9,5 +9,5 @@ import com.kingja.loadsir.callback.Callback;
  * Email:kingjavip@gmail.com
  */
 public interface Convertor<T> {
-   Class<?extends Callback> map(T t);
+    Class<? extends Callback> map(T t);
 }

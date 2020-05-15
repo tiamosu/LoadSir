@@ -1,6 +1,5 @@
 package com.kingja.loadsir.core;
 
-
 import com.kingja.loadsir.LoadSirUtil;
 import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.target.ActivityTarget;
@@ -53,11 +52,11 @@ public class LoadSir {
         return register(target, onReloadListener, null);
     }
 
-    public <T> LoadService register(Object target, Callback.OnReloadListener onReloadListener, Convertor<T>
-            convertor) {
-        ITarget targetContext = LoadSirUtil.getTargetContext(target, builder.getTargetContextList());
-        LoadLayout loadLayout = targetContext.replaceView(target, onReloadListener);
-        return new LoadService<>(convertor,loadLayout,  builder);
+    public <T> LoadService register(Object target, Callback.OnReloadListener onReloadListener,
+                                    Convertor<T> convertor) {
+        final ITarget targetContext = LoadSirUtil.getTargetContext(target, builder.getTargetContextList());
+        final LoadLayout loadLayout = targetContext.replaceView(target, onReloadListener);
+        return new LoadService<>(convertor, loadLayout, builder);
     }
 
     public static Builder beginBuilder() {
@@ -80,7 +79,6 @@ public class LoadSir {
         }
 
         /**
-         * @param targetContext
          * @return Builder
          * @since 1.3.8
          */
@@ -113,6 +111,5 @@ public class LoadSir {
         public LoadSir build() {
             return new LoadSir(this);
         }
-
     }
 }

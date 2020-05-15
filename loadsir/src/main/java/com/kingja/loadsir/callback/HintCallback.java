@@ -4,14 +4,12 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StyleRes;
-
 
 /**
  * Description:TODO
@@ -20,7 +18,6 @@ import androidx.annotation.StyleRes;
  * Email:kingjavip@gmail.com
  */
 public class HintCallback extends Callback {
-
     private String title;
     private String subTitle;
     private int imgResId;
@@ -47,19 +44,18 @@ public class HintCallback extends Callback {
 
     @Override
     protected void onViewCreate(Context context, View view) {
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+        final LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-2, -2);
         lp.gravity = Gravity.CENTER;
-        LinearLayout ll = (LinearLayout) view;
+        final LinearLayout ll = (LinearLayout) view;
         ll.setOrientation(LinearLayout.VERTICAL);
         ll.setGravity(Gravity.CENTER);
         if (imgResId != -1) {
-            ImageView ivImage = new ImageView(context);
+            final ImageView ivImage = new ImageView(context);
             ivImage.setBackgroundResource(imgResId);
             ll.addView(ivImage, lp);
         }
         if (!TextUtils.isEmpty(title)) {
-            TextView tvTitle = new TextView(context);
+            final TextView tvTitle = new TextView(context);
             tvTitle.setText(title);
             if (titleStyleRes == -1) {
                 tvTitle.setTextAppearance(context, android.R.style.TextAppearance_Large);
@@ -69,7 +65,7 @@ public class HintCallback extends Callback {
             ll.addView(tvTitle, lp);
         }
         if (!TextUtils.isEmpty(subTitle)) {
-            TextView tvSubtitle = new TextView(context);
+            final TextView tvSubtitle = new TextView(context);
             tvSubtitle.setText(subTitle);
             if (subTitleStyleRes == -1) {
                 tvSubtitle.setTextAppearance(context, android.R.style.TextAppearance_Small);

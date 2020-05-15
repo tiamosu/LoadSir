@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -18,11 +17,10 @@ import androidx.annotation.StyleRes;
  * Email:kingjavip@gmail.com
  */
 public class ProgressCallback extends Callback {
-
     private String title;
     private String subTitle;
-    private int subTitleStyleRes = -1;
-    private int titleStyleRes = -1;
+    private int subTitleStyleRes;
+    private int titleStyleRes;
 
     private ProgressCallback(Builder builder) {
         this.title = builder.title;
@@ -44,18 +42,17 @@ public class ProgressCallback extends Callback {
 
     @Override
     protected void onViewCreate(Context context, View view) {
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+        final LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-2, -2);
         lp.gravity = Gravity.CENTER;
-        LinearLayout ll = (LinearLayout) view;
+        final LinearLayout ll = (LinearLayout) view;
         ll.setOrientation(LinearLayout.VERTICAL);
         ll.setGravity(Gravity.CENTER);
 
-        ProgressBar progressBar = new ProgressBar(context);
+        final ProgressBar progressBar = new ProgressBar(context);
         ll.addView(progressBar, lp);
 
         if (!TextUtils.isEmpty(title)) {
-            TextView tvTitle = new TextView(context);
+            final TextView tvTitle = new TextView(context);
             tvTitle.setText(title);
             if (titleStyleRes == -1) {
                 tvTitle.setTextAppearance(context, android.R.style.TextAppearance_Large);
@@ -65,7 +62,7 @@ public class ProgressCallback extends Callback {
             ll.addView(tvTitle, lp);
         }
         if (!TextUtils.isEmpty(subTitle)) {
-            TextView tvSubtitle = new TextView(context);
+            final TextView tvSubtitle = new TextView(context);
             tvSubtitle.setText(subTitle);
             if (subTitleStyleRes == -1) {
                 tvSubtitle.setTextAppearance(context, android.R.style.TextAppearance_Medium);
@@ -77,7 +74,6 @@ public class ProgressCallback extends Callback {
     }
 
     public static class Builder {
-
         private String title;
         private String subTitle;
         private int subTitleStyleRes = -1;

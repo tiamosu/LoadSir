@@ -18,7 +18,7 @@ import java.io.Serializable;
 public abstract class Callback implements Serializable {
     private View rootView;
     private Context context;
-    protected OnReloadListener onReloadListener;
+    private OnReloadListener onReloadListener;
     private boolean successViewVisible;
 
     public Callback() {
@@ -37,7 +37,7 @@ public abstract class Callback implements Serializable {
     }
 
     public View getRootView() {
-        int resId = onCreateView();
+        final int resId = onCreateView();
         if (resId == 0 && rootView != null) {
             return rootView;
         }
@@ -91,15 +91,15 @@ public abstract class Callback implements Serializable {
     }
 
     public Callback copy() {
-        ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        ObjectOutputStream oos;
+        final ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        final ObjectOutputStream oos;
         Object obj = null;
         try {
             oos = new ObjectOutputStream(bao);
             oos.writeObject(this);
             oos.close();
-            ByteArrayInputStream bis = new ByteArrayInputStream(bao.toByteArray());
-            ObjectInputStream ois = new ObjectInputStream(bis);
+            final ByteArrayInputStream bis = new ByteArrayInputStream(bao.toByteArray());
+            final ObjectInputStream ois = new ObjectInputStream(bis);
             obj = ois.readObject();
             ois.close();
         } catch (Exception e) {
@@ -116,6 +116,10 @@ public abstract class Callback implements Serializable {
             rootView = View.inflate(context, onCreateView(), null);
         }
         return rootView;
+    }
+
+    public OnReloadListener obtainReloadListener() {
+        return onReloadListener;
     }
 
     public interface OnReloadListener extends Serializable {

@@ -9,8 +9,8 @@ import android.view.View;
  * Author:KingJA
  * Email:kingjavip@gmail.com
  */
-
 public class SuccessCallback extends Callback {
+
     public SuccessCallback(View view, Context context, OnReloadListener onReloadListener) {
         super(view, context, onReloadListener);
     }
@@ -34,5 +34,4 @@ public class SuccessCallback extends Callback {
     public void showWithCallback(boolean successVisible) {
         obtainRootView().setVisibility(successVisible ? View.VISIBLE : View.INVISIBLE);
     }
-
 }
