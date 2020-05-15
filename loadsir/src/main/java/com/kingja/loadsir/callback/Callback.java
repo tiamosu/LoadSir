@@ -9,7 +9,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-
 /**
  * Description:TODO
  * Create Time:2017/9/2 17:04
@@ -19,7 +18,7 @@ import java.io.Serializable;
 public abstract class Callback implements Serializable {
     private View rootView;
     private Context context;
-    private OnReloadListener onReloadListener;
+    protected OnReloadListener onReloadListener;
     private boolean successViewVisible;
 
     public Callback() {
@@ -148,5 +147,4 @@ public abstract class Callback implements Serializable {
      */
     public void onDetach() {
     }
-
 }
