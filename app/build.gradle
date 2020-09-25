@@ -27,10 +27,11 @@ dependencies {
     implementation project(':loadsir')
 
     implementation 'com.google.android.material:material:1.2.1'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
+    implementation Deps.androidx_appcompat
+    implementation Deps.androidx_constraint_layout
+
+    debugImplementation Deps.leakcanary_android
 
     implementation 'com.jakewharton:butterknife:10.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'

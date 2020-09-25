@@ -30,6 +30,7 @@ object Publish {
     const val website = "https://github.com/tiamosu/LoadSir"
     const val gitUrl = "https://github.com/tiamosu/LoadSir.git"
     const val email = "djy2009wenbi@gmail.com"
+    const val projectName = "X-LoadSir"
 }
 
 object Deps {
@@ -37,27 +38,27 @@ object Deps {
     const val androidx_appcompat = "androidx.appcompat:appcompat:${Versions.appcompat}"
     const val androidx_viewpager2 = "androidx.viewpager2:viewpager2:${Versions.viewpager2}"
     const val androidx_constraint_layout =
-        "androidx.constraintlayout:constraintlayout:${Versions.constraintlayout}"
+            "androidx.constraintlayout:constraintlayout:${Versions.constraintlayout}"
     const val androidx_core_ktx = "androidx.core:core-ktx:${Versions.corektx}"
 
     //navigation
     const val androidx_fragment_ktx = "androidx.fragment:fragment-ktx:${Versions.fragmentktx}"
     const val androidx_navigation_runtime =
-        "androidx.navigation:navigation-runtime:${Versions.navigation}"
+            "androidx.navigation:navigation-runtime:${Versions.navigation}"
     const val androidx_navigation_fragment_ktx =
-        "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
+            "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
     const val androidx_navigation_ui_ktx =
-        "androidx.navigation:navigation-ui-ktx:${Versions.navigation}"
+            "androidx.navigation:navigation-ui-ktx:${Versions.navigation}"
 
     //lifecycle
     const val lifecycle_runtime = "androidx.lifecycle:lifecycle-runtime:${Versions.lifecycle}"
     const val lifecycle_common_java8 =
-        "androidx.lifecycle:lifecycle-common-java8:${Versions.lifecycle}"
+            "androidx.lifecycle:lifecycle-common-java8:${Versions.lifecycle}"
     const val lifecycle_extensions = "androidx.lifecycle:lifecycle-extensions:${Versions.lifecycle}"
     const val lifecycle_viewmodel_ktx =
-        "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
+            "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
     const val lifecycle_livedata_ktx =
-        "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
+            "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
 
     //kotlin
     const val kotlin_stdlib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
@@ -67,5 +68,5 @@ object Deps {
 
     //leakcanary
     const val leakcanary_android =
-        "com.squareup.leakcanary:leakcanary-android:${Versions.leakcanary}"
+            "com.squareup.leakcanary:leakcanary-android:${Versions.leakcanary}"
 }
