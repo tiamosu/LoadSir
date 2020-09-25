@@ -2,7 +2,6 @@ package sample.kingja.loadsir.target;
 
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.view.View;
 import android.widget.TextView;
 
 import com.kingja.loadsir.callback.Callback;
@@ -37,21 +36,15 @@ public class ConstraintLayoutActivity extends AppCompatActivity {
 
     private void initLoadSir() {
         TextView tv_center = findViewById(R.id.tv_center);
-        loadService = LoadSir.getDefault().register(tv_center, new Callback.OnReloadListener() {
-            @Override
-            public void onReload(View v) {
-                // Your can change the status out of Main thread.
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadService.showCallback(LoadingCallback.class);
-                        //do retry logic...
-                        SystemClock.sleep(500);
-                        //callback
-                        loadService.showSuccess();
-                    }
-                }).start();
-            }
+        loadService = LoadSir.Companion.getDefault().register(tv_center, (Callback.OnReloadListener) v -> {
+            // Your can change the status out of Main thread.
+            new Thread(() -> {
+                loadService.showCallback(LoadingCallback.class);
+                //do retry logic...
+                SystemClock.sleep(500);
+                //callback
+                loadService.showSuccess();
+            }).start();
         });
         PostUtil.postCallbackDelayed(loadService, EmptyCallback.class, 1000);
     }

@@ -48,7 +48,7 @@ public abstract class BaseTitleActivity extends AppCompatActivity {
                     FrameLayout.LayoutParams.MATCH_PARENT);
             flContent.addView(content, params);
             ButterKnife.bind(this, rootView);
-            mBaseLoadService = LoadSir.getDefault().register(content, (Callback.OnReloadListener) this::onNetReload);
+            mBaseLoadService = LoadSir.Companion.getDefault().register(content, (Callback.OnReloadListener) this::onNetReload);
         }
     }
 

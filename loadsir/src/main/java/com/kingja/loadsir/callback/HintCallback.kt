@@ -1,115 +1,116 @@
-package com.kingja.loadsir.callback;
+package com.kingja.loadsir.callback
 
-import android.content.Context;
-import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.R
+import android.content.Context
+import android.view.Gravity
+import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.annotation.DrawableRes
+import androidx.annotation.StyleRes
 
-import androidx.annotation.DrawableRes;
-import androidx.annotation.StyleRes;
+class HintCallback(builder: Builder) : Callback() {
+    private val title: String?
+    private val subTitle: String?
+    private val imgResId: Int
+    private val titleStyleRes: Int
+    private val subTitleStyleRes: Int
 
-/**
- * Description:TODO
- * Create Time:2017/10/9 14:12
- * Author:KingJA
- * Email:kingjavip@gmail.com
- */
-public class HintCallback extends Callback {
-    private String title;
-    private String subTitle;
-    private int imgResId;
-    private int titleStyleRes;
-    private int subTitleStyleRes;
-
-    public HintCallback(Builder builder) {
-        this.title = builder.title;
-        this.subTitle = builder.subTitle;
-        this.imgResId = builder.imgResId;
-        this.subTitleStyleRes = builder.subTitleStyleRes;
-        this.titleStyleRes = builder.titleStyleRes;
+    init {
+        title = builder.title
+        subTitle = builder.subTitle
+        imgResId = builder.imgResId
+        subTitleStyleRes = builder.subTitleStyleRes
+        titleStyleRes = builder.titleStyleRes
     }
 
-    @Override
-    protected int onCreateView() {
-        return 0;
+    override fun onCreateView() = 0
+
+    override fun onBuildView(context: Context): View? {
+        return LinearLayout(context)
     }
 
-    @Override
-    protected View onBuildView(Context context) {
-        return new LinearLayout(context);
-    }
-
-    @Override
-    protected void onViewCreate(Context context, View view) {
-        final LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-2, -2);
-        lp.gravity = Gravity.CENTER;
-        final LinearLayout ll = (LinearLayout) view;
-        ll.setOrientation(LinearLayout.VERTICAL);
-        ll.setGravity(Gravity.CENTER);
-        if (imgResId != -1) {
-            final ImageView ivImage = new ImageView(context);
-            ivImage.setBackgroundResource(imgResId);
-            ll.addView(ivImage, lp);
+    @Suppress("DEPRECATION")
+    override fun onViewCreate(context: Context, view: View) {
+        val lp = LinearLayout.LayoutParams(-2, -2).apply {
+            gravity = Gravity.CENTER
         }
-        if (!TextUtils.isEmpty(title)) {
-            final TextView tvTitle = new TextView(context);
-            tvTitle.setText(title);
-            if (titleStyleRes == -1) {
-                tvTitle.setTextAppearance(context, android.R.style.TextAppearance_Large);
-            } else {
-                tvTitle.setTextAppearance(context, titleStyleRes);
+        (view as? LinearLayout)?.apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER
+
+            if (imgResId != -1) {
+                val ivImage = ImageView(context)
+                ivImage.setBackgroundResource(imgResId)
+                addView(ivImage, lp)
             }
-            ll.addView(tvTitle, lp);
-        }
-        if (!TextUtils.isEmpty(subTitle)) {
-            final TextView tvSubtitle = new TextView(context);
-            tvSubtitle.setText(subTitle);
-            if (subTitleStyleRes == -1) {
-                tvSubtitle.setTextAppearance(context, android.R.style.TextAppearance_Small);
-            } else {
-                tvSubtitle.setTextAppearance(context, subTitleStyleRes);
+
+            if (title?.isNotBlank() == true) {
+                TextView(context).apply {
+                    text = title
+                    if (titleStyleRes == -1) {
+                        setTextAppearance(context, R.style.TextAppearance_Large)
+                    } else {
+                        setTextAppearance(context, titleStyleRes)
+                    }
+                    addView(this, lp)
+                }
             }
-            ll.addView(tvSubtitle, lp);
+
+            if (subTitle?.isNotBlank() == true) {
+                TextView(context).apply {
+                    text = subTitle
+                    if (subTitleStyleRes == -1) {
+                        setTextAppearance(context, R.style.TextAppearance_Small)
+                    } else {
+                        setTextAppearance(context, subTitleStyleRes)
+                    }
+                    addView(this, lp)
+                }
+            }
         }
     }
 
-    public static class Builder {
-        private String title;
-        private String subTitle;
-        private int imgResId = -1;
-        private int subTitleStyleRes = -1;
-        private int titleStyleRes = -1;
+    class Builder {
+        var title: String? = null
+            private set
+        var subTitle: String? = null
+            private set
+        var imgResId = -1
+            private set
+        var subTitleStyleRes = -1
+            private set
+        var titleStyleRes = -1
+            private set
 
-        public Builder setHintImg(@DrawableRes int imgResId) {
-            this.imgResId = imgResId;
-            return this;
+        fun setHintImg(@DrawableRes imgResId: Int): Builder {
+            this.imgResId = imgResId
+            return this
         }
 
-        public Builder setTitle(String title) {
-            return setTitle(title, -1);
+        fun setTitle(title: String): Builder {
+            return setTitle(title, -1)
         }
 
-        public Builder setTitle(String title, @StyleRes int titleStyleRes) {
-            this.title = title;
-            this.titleStyleRes = titleStyleRes;
-            return this;
+        fun setTitle(title: String, @StyleRes titleStyleRes: Int): Builder {
+            this.title = title
+            this.titleStyleRes = titleStyleRes
+            return this
         }
 
-        public Builder setSubTitle(String subTitle) {
-            return setSubTitle(subTitle, -1);
+        fun setSubTitle(subTitle: String): Builder {
+            return setSubTitle(subTitle, -1)
         }
 
-        public Builder setSubTitle(String subTitle, @StyleRes int subTitleStyleRes) {
-            this.subTitle = subTitle;
-            this.subTitleStyleRes = subTitleStyleRes;
-            return this;
+        fun setSubTitle(subTitle: String, @StyleRes subTitleStyleRes: Int): Builder {
+            this.subTitle = subTitle
+            this.subTitleStyleRes = subTitleStyleRes
+            return this
         }
 
-        public HintCallback build() {
-            return new HintCallback(this);
+        fun build(): HintCallback {
+            return HintCallback(this)
         }
     }
 }

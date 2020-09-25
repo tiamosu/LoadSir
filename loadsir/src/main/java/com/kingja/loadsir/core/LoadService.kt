@@ -1,88 +1,71 @@
-package com.kingja.loadsir.core;
+package com.kingja.loadsir.core
 
-import android.content.Context;
-import android.os.Handler;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import com.kingja.loadsir.callback.Callback
+import com.kingja.loadsir.callback.SuccessCallback
 
-import com.kingja.loadsir.callback.Callback;
-import com.kingja.loadsir.callback.SuccessCallback;
+class LoadService<T>(
+        private val convertor: Convertor<T>?,
+        val loadLayout: LoadLayout?,
+        builder: LoadSir.Builder
+) {
 
-import java.util.List;
+    private val handler by lazy { Handler(Looper.getMainLooper()) }
 
-/**
- * Description:TODO
- * Create Time:2017/9/6 10:05
- * Author:KingJA
- * Email:kingjavip@gmail.com
- */
-public class LoadService<T> {
-    private LoadLayout loadLayout;
-    private Convertor<T> convertor;
-
-    LoadService(Convertor<T> convertor, LoadLayout loadLayout, LoadSir.Builder builder) {
-        this.convertor = convertor;
-        this.loadLayout = loadLayout;
-        initCallback(builder);
+    init {
+        initCallback(builder)
     }
 
-    private void initCallback(LoadSir.Builder builder) {
-        final List<Callback> callbacks = builder.getCallbacks();
-        final Class<? extends Callback> defalutCallback = builder.getDefaultCallback();
-        if (callbacks != null && callbacks.size() > 0) {
-            for (Callback callback : callbacks) {
-                loadLayout.setupCallback(callback);
+    private fun initCallback(builder: LoadSir.Builder) {
+        val callbacks = builder.callbackList
+        val defaultCallback = builder.defaultCallback
+        callbacks.forEach {
+            loadLayout?.setupCallback(it)
+        }
+
+        if (defaultCallback != null && loadLayout != null) {
+            handler.post {
+                loadLayout.showCallback(defaultCallback)
             }
         }
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                if (defalutCallback != null) {
-                    loadLayout.showCallback(defalutCallback);
-                }
-            }
-        });
     }
 
-    public void showSuccess() {
-        loadLayout.showCallback(SuccessCallback.class);
+    fun showSuccess() {
+        loadLayout?.showCallback(SuccessCallback::class.java)
     }
 
-    public void showCallback(Class<? extends Callback> callback) {
-        loadLayout.showCallback(callback);
+    fun showCallback(callback: Class<out Callback>) {
+        loadLayout?.showCallback(callback)
     }
 
-    public void showWithConvertor(T t) {
-        if (convertor == null) {
-            throw new IllegalArgumentException("You haven't set the Convertor.");
-        }
-        loadLayout.showCallback(convertor.map(t));
+    fun showWithConvertor(t: T) {
+        requireNotNull(convertor) { "You haven't set the Convertor." }
+        loadLayout?.showCallback(convertor.map(t))
     }
 
-    public LoadLayout getLoadLayout() {
-        return loadLayout;
-    }
-
-    public Class<? extends Callback> getCurrentCallback() {
-        return loadLayout.getCurrentCallback();
-    }
+    val currentCallback: Class<out Callback>?
+        get() = loadLayout?.currentCallback
 
     /**
      * obtain rootView if you want keep the toolbar in Fragment
      *
      * @since 1.2.2
-     * @deprecated
      */
-    public LinearLayout getTitleLoadLayout(Context context, ViewGroup rootView, View titleView) {
-        final LinearLayout newRootView = new LinearLayout(context);
-        newRootView.setOrientation(LinearLayout.VERTICAL);
-        final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-1, -1);
-        newRootView.setLayoutParams(layoutParams);
-        rootView.removeView(titleView);
-        newRootView.addView(titleView);
-        newRootView.addView(loadLayout, layoutParams);
-        return newRootView;
+    @Deprecated("")
+    fun getTitleLoadLayout(context: Context, rootView: ViewGroup, titleView: View): LinearLayout {
+        return LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            val lp = LinearLayout.LayoutParams(-1, -1)
+            layoutParams = lp
+            rootView.removeView(titleView)
+            addView(titleView)
+            addView(loadLayout, lp)
+        }
     }
 
     /**
@@ -92,8 +75,8 @@ public class LoadService<T> {
      * @param transport a interface include modify logic
      * @since 1.2.2
      */
-    public LoadService<T> setCallBack(Class<? extends Callback> callback, Transport transport) {
-        loadLayout.setCallBack(callback, transport);
-        return this;
+    fun setCallBack(callback: Class<out Callback>, transport: Transport?): LoadService<T> {
+        loadLayout?.setCallBack(callback, transport)
+        return this
     }
 }

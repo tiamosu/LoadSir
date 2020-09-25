@@ -2,7 +2,6 @@ package sample.kingja.loadsir.target;
 
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.view.View;
 
 import com.kingja.loadsir.callback.Callback;
 import com.kingja.loadsir.core.LoadService;
@@ -38,21 +37,16 @@ public class AnimateActivity extends AppCompatActivity {
                 .addCallback(new AnimateCallback())
                 .setDefaultCallback(AnimateCallback.class)
                 .build();
-        loadService = loadSir.register(this, new Callback.OnReloadListener() {
-            @Override
-            public void onReload(View v) {
-                // Your can change the status out of Main thread.
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadService.showCallback(AnimateCallback.class);
-                        //do retry logic...
-                        SystemClock.sleep(500);
-                        //callback on sub thread
-                        loadService.showSuccess();
-                    }
-                }).start();
-            }
+
+        loadService = loadSir.register(this, (Callback.OnReloadListener) v -> {
+            // Your can change the status out of Main thread.
+            new Thread(() -> {
+                loadService.showCallback(AnimateCallback.class);
+                //do retry logic...
+                SystemClock.sleep(500);
+                //callback on sub thread
+                loadService.showSuccess();
+            }).start();
         });
         PostUtil.postCallbackDelayed(loadService, EmptyCallback.class, 1000);
     }

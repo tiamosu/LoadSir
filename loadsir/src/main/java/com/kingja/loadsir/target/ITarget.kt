@@ -1,26 +1,19 @@
-package com.kingja.loadsir.target;
+package com.kingja.loadsir.target
 
-import com.kingja.loadsir.callback.Callback;
-import com.kingja.loadsir.core.LoadLayout;
+import com.kingja.loadsir.callback.Callback
+import com.kingja.loadsir.core.LoadLayout
 
-/**
- * Description:TODO
- * Create Time:2019/8/29 0029 下午 2:43
- * Author:KingJA
- * Email:kingjavip@gmail.com
- */
-public interface ITarget {
+interface ITarget {
 
     /**
      * @return v1.3.8
      */
-    @Override
-    boolean equals(Object target);
+    override fun equals(other: Any?): Boolean
 
     /**
      * 1.removeView 2.确定LP 3.addView
      *
      * @return v1.3.8
      */
-    LoadLayout replaceView(Object target, Callback.OnReloadListener onReloadListener);
+    fun replaceView(target: Any, onReloadListener: Callback.OnReloadListener?): LoadLayout?
 }

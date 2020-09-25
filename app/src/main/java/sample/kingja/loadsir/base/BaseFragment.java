@@ -29,7 +29,7 @@ public abstract class BaseFragment extends Fragment {
             savedInstanceState) {
         View rootView = inflater.inflate(onCreateFragmentView(), container, false);
         ButterKnife.bind(this, rootView);
-        mBaseLoadService = LoadSir.getDefault().register(rootView, new Callback.OnReloadListener() {
+        mBaseLoadService = LoadSir.Companion.getDefault().register(rootView, new Callback.OnReloadListener() {
             @Override
             public void onReload(View v) {
                 onNetReload(v);

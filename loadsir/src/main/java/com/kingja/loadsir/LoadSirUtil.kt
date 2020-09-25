@@ -1,30 +1,19 @@
-package com.kingja.loadsir;
+package com.kingja.loadsir
 
-import android.os.Looper;
+import android.os.Looper
+import com.kingja.loadsir.target.ITarget
 
-import com.kingja.loadsir.target.ITarget;
+object LoadSirUtil {
 
-import java.util.List;
+    val isMainThread: Boolean
+        get() = Looper.myLooper() == Looper.getMainLooper()
 
-/**
- * Description:TODO
- * Create Time:2017/9/4 16:24
- * Author:KingJA
- * Email:kingjavip@gmail.com
- */
-public class LoadSirUtil {
-
-    public static boolean isMainThread() {
-        return Looper.myLooper() == Looper.getMainLooper();
-    }
-
-    public static ITarget getTargetContext(Object target, List<ITarget> targetContextList) {
-        for (ITarget targetContext : targetContextList) {
-            if (targetContext.equals(target)) {
-                return targetContext;
+    fun getTargetContext(target: Any, targetContextList: List<ITarget>): ITarget {
+        for (targetContext in targetContextList) {
+            if (targetContext == target) {
+                return targetContext
             }
-
         }
-        throw new IllegalArgumentException("No TargetContext fit it");
+        throw IllegalArgumentException("No TargetContext fit it")
     }
 }

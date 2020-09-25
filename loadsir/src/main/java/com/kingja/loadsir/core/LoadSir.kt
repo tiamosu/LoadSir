@@ -1,115 +1,90 @@
-package com.kingja.loadsir.core;
+package com.kingja.loadsir.core
 
-import com.kingja.loadsir.LoadSirUtil;
-import com.kingja.loadsir.callback.Callback;
-import com.kingja.loadsir.target.ActivityTarget;
-import com.kingja.loadsir.target.ITarget;
-import com.kingja.loadsir.target.ViewTarget;
+import com.kingja.loadsir.LoadSirUtil
+import com.kingja.loadsir.callback.Callback
+import com.kingja.loadsir.target.ActivityTarget
+import com.kingja.loadsir.target.ITarget
+import com.kingja.loadsir.target.ViewTarget
+import java.util.*
 
-import java.util.ArrayList;
-import java.util.List;
+class LoadSir {
+    private var builder: Builder
 
-import androidx.annotation.NonNull;
-
-/**
- * Description:TODO
- * Create Time:2017/9/2 16:36
- * Author:KingJA
- * Email:kingjavip@gmail.com
- */
-public class LoadSir {
-    private static volatile LoadSir loadSir;
-    private Builder builder;
-
-    public static LoadSir getDefault() {
-        if (loadSir == null) {
-            synchronized (LoadSir.class) {
-                if (loadSir == null) {
-                    loadSir = new LoadSir();
-                }
-            }
-        }
-        return loadSir;
+    private constructor() {
+        this.builder = Builder()
     }
 
-    private LoadSir() {
-        this.builder = new Builder();
+    private fun setBuilder(builder: Builder) {
+        this.builder = builder
     }
 
-    private void setBuilder(@NonNull Builder builder) {
-        this.builder = builder;
+    private constructor(builder: Builder) {
+        this.builder = builder
     }
 
-    private LoadSir(Builder builder) {
-        this.builder = builder;
+    @JvmOverloads
+    fun <T> register(target: Any,
+                     onReloadListener: Callback.OnReloadListener?,
+                     convertor: Convertor<T>? = null
+    ): LoadService<*> {
+        val targetContext = LoadSirUtil.getTargetContext(target, builder.getTargetContextList())
+        val loadLayout = targetContext.replaceView(target, onReloadListener)
+        return LoadService(convertor, loadLayout, builder)
     }
 
-    public LoadService register(@NonNull Object target) {
-        return register(target, null, null);
-    }
+    class Builder {
+        val callbackList: MutableList<Callback> = ArrayList()
+        private val targetContextList: MutableList<ITarget> = ArrayList()
+        var defaultCallback: Class<out Callback>? = null
+            private set
 
-    public LoadService register(Object target, Callback.OnReloadListener onReloadListener) {
-        return register(target, onReloadListener, null);
-    }
-
-    public <T> LoadService register(Object target, Callback.OnReloadListener onReloadListener,
-                                    Convertor<T> convertor) {
-        final ITarget targetContext = LoadSirUtil.getTargetContext(target, builder.getTargetContextList());
-        final LoadLayout loadLayout = targetContext.replaceView(target, onReloadListener);
-        return new LoadService<>(convertor, loadLayout, builder);
-    }
-
-    public static Builder beginBuilder() {
-        return new Builder();
-    }
-
-    public static class Builder {
-        private List<Callback> callbacks = new ArrayList<>();
-        private List<ITarget> targetContextList = new ArrayList<>();
-        private Class<? extends Callback> defaultCallback;
-
-        {
-            targetContextList.add(new ActivityTarget());
-            targetContextList.add(new ViewTarget());
+        init {
+            targetContextList.add(ActivityTarget())
+            targetContextList.add(ViewTarget())
         }
 
-        public Builder addCallback(@NonNull Callback callback) {
-            callbacks.add(callback);
-            return this;
+        fun addCallback(callback: Callback): Builder {
+            callbackList.add(callback)
+            return this
         }
 
         /**
          * @return Builder
          * @since 1.3.8
          */
-        public Builder addTargetContext(ITarget targetContext) {
-            targetContextList.add(targetContext);
-            return this;
+        fun addTargetContext(targetContext: ITarget): Builder {
+            targetContextList.add(targetContext)
+            return this
         }
 
-        public List<ITarget> getTargetContextList() {
-            return targetContextList;
+        fun getTargetContextList(): List<ITarget> {
+            return targetContextList
         }
 
-        public Builder setDefaultCallback(@NonNull Class<? extends Callback> defaultCallback) {
-            this.defaultCallback = defaultCallback;
-            return this;
+        fun setDefaultCallback(defaultCallback: Class<out Callback>): Builder {
+            this.defaultCallback = defaultCallback
+            return this
         }
 
-        List<Callback> getCallbacks() {
-            return callbacks;
+        fun getCallbacks(): List<Callback> {
+            return callbackList
         }
 
-        Class<? extends Callback> getDefaultCallback() {
-            return defaultCallback;
+        fun commit() {
+            default.setBuilder(this)
         }
 
-        public void commit() {
-            getDefault().setBuilder(this);
+        fun build(): LoadSir {
+            return LoadSir(this)
         }
+    }
 
-        public LoadSir build() {
-            return new LoadSir(this);
+    companion object {
+        val default by lazy { LoadSir() }
+
+        @JvmStatic
+        fun beginBuilder(): Builder {
+            return Builder()
         }
     }
 }

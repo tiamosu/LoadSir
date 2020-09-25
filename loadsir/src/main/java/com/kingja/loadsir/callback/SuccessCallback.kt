@@ -1,37 +1,24 @@
-package com.kingja.loadsir.callback;
+package com.kingja.loadsir.callback
 
-import android.content.Context;
-import android.view.View;
+import android.content.Context
+import android.view.View
 
-/**
- * Description:TODO
- * Create Time:2017/9/4 10:22
- * Author:KingJA
- * Email:kingjavip@gmail.com
- */
-public class SuccessCallback extends Callback {
+class SuccessCallback(view: View, context: Context, onReloadListener: OnReloadListener?)
+    : Callback(view, context, onReloadListener) {
 
-    public SuccessCallback(View view, Context context, OnReloadListener onReloadListener) {
-        super(view, context, onReloadListener);
+    override fun onCreateView() = 0
+
+    @Deprecated("Use {@link #showWithCallback(boolean successVisible)} instead.",
+            ReplaceWith("obtainRootView()?.visibility = View.INVISIBLE", "android.view.View"))
+    fun hide() {
+        obtainRootView()?.visibility = View.INVISIBLE
     }
 
-    @Override
-    protected int onCreateView() {
-        return 0;
+    fun show() {
+        obtainRootView()?.visibility = View.VISIBLE
     }
 
-    /**
-     * @deprecated Use {@link #showWithCallback(boolean successVisible)} instead.
-     */
-    public void hide() {
-        obtainRootView().setVisibility(View.INVISIBLE);
-    }
-
-    public void show() {
-        obtainRootView().setVisibility(View.VISIBLE);
-    }
-
-    public void showWithCallback(boolean successVisible) {
-        obtainRootView().setVisibility(successVisible ? View.VISIBLE : View.INVISIBLE);
+    fun showWithCallback(successVisible: Boolean) {
+        obtainRootView()?.visibility = if (successVisible) View.VISIBLE else View.INVISIBLE
     }
 }

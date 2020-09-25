@@ -1,147 +1,123 @@
-package com.kingja.loadsir.callback;
+package com.kingja.loadsir.callback
 
-import android.content.Context;
-import android.view.View;
+import android.content.Context
+import android.view.View
+import java.io.*
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+abstract class Callback : Serializable {
+    @Transient
+    private var rootView: View? = null
 
-/**
- * Description:TODO
- * Create Time:2017/9/2 17:04
- * Author:KingJA
- * Email:kingjavip@gmail.com
- */
-public abstract class Callback implements Serializable {
-    private View rootView;
-    private Context context;
-    private OnReloadListener onReloadListener;
-    private boolean successViewVisible;
+    @Transient
+    private lateinit var context: Context
 
-    public Callback() {
-    }
-
-    Callback(View view, Context context, OnReloadListener onReloadListener) {
-        this.rootView = view;
-        this.context = context;
-        this.onReloadListener = onReloadListener;
-    }
-
-    public Callback setCallback(Context context, OnReloadListener onReloadListener) {
-        this.context = context;
-        this.onReloadListener = onReloadListener;
-        return this;
-    }
-
-    public View getRootView() {
-        final int resId = onCreateView();
-        if (resId == 0 && rootView != null) {
-            return rootView;
-        }
-
-        if (onBuildView(context) != null) {
-            rootView = onBuildView(context);
-        }
-
-        if (rootView == null) {
-            rootView = View.inflate(context, onCreateView(), null);
-        }
-        rootView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onReloadEvent(context, rootView)) {
-                    return;
-                }
-                if (onReloadListener != null) {
-                    onReloadListener.onReload(v);
-                }
-            }
-        });
-        onViewCreate(context, rootView);
-        return rootView;
-    }
-
-    protected View onBuildView(Context context) {
-        return null;
-    }
+    private var onReloadListener: OnReloadListener? = null
 
     /**
      * if return true, the successView will be visible when the view of callback is attached.
      */
-    public boolean getSuccessVisible() {
-        return successViewVisible;
+    var successVisible = false
+
+    constructor()
+
+    constructor(view: View?, context: Context, onReloadListener: OnReloadListener?) {
+        this.rootView = view
+        this.context = context
+        this.onReloadListener = onReloadListener
     }
 
-    void setSuccessVisible(boolean visible) {
-        this.successViewVisible = visible;
+    fun setCallback(context: Context, onReloadListener: OnReloadListener?): Callback {
+        this.context = context
+        this.onReloadListener = onReloadListener
+        return this
     }
 
-    /**
-     * @deprecated Use {@link #onReloadEvent(Context context, View view)} instead.
-     */
-    protected boolean onRetry(Context context, View view) {
-        return false;
-    }
-
-    protected boolean onReloadEvent(Context context, View view) {
-        return false;
-    }
-
-    public Callback copy() {
-        final ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        final ObjectOutputStream oos;
-        Object obj = null;
-        try {
-            oos = new ObjectOutputStream(bao);
-            oos.writeObject(this);
-            oos.close();
-            final ByteArrayInputStream bis = new ByteArrayInputStream(bao.toByteArray());
-            final ObjectInputStream ois = new ObjectInputStream(bis);
-            obj = ois.readObject();
-            ois.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+    fun getRootView(): View? {
+        if (rootView != null) {
+            return rootView
         }
-        return (Callback) obj;
+        rootView = onBuildView(context)
+
+        val resId = onCreateView()
+        if (rootView == null && resId > 0) {
+            rootView = View.inflate(context, onCreateView(), null)
+        }
+        rootView?.apply {
+            setOnClickListener {
+                if (onReloadEvent(context, this)) {
+                    return@setOnClickListener
+                }
+                onReloadListener?.onReload(this)
+            }
+            onViewCreate(context, this)
+        }
+        return rootView
+    }
+
+    protected open fun onBuildView(context: Context): View? {
+        return null
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    protected open fun onReloadEvent(context: Context, view: View): Boolean {
+        return false
+    }
+
+    fun copy(): Callback? {
+        var obj: Any? = null
+        try {
+            val bao = ByteArrayOutputStream()
+            val oos = ObjectOutputStream(bao)
+            oos.writeObject(this)
+            oos.close()
+            val bis = ByteArrayInputStream(bao.toByteArray())
+            val ois = ObjectInputStream(bis)
+            obj = ois.readObject()
+            ois.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return obj as? Callback
     }
 
     /**
      * @since 1.2.2
      */
-    public View obtainRootView() {
-        if (rootView == null) {
-            rootView = View.inflate(context, onCreateView(), null);
+    fun obtainRootView(): View? {
+        if (rootView != null) {
+            return rootView
         }
-        return rootView;
+        val resId = onCreateView()
+        if (rootView == null && resId > 0) {
+            rootView = View.inflate(context, onCreateView(), null)
+        }
+        return rootView
     }
 
-    public OnReloadListener obtainReloadListener() {
-        return onReloadListener;
+    fun obtainReloadListener(): OnReloadListener? {
+        return onReloadListener
     }
 
-    public interface OnReloadListener extends Serializable {
-        void onReload(View v);
+    fun interface OnReloadListener : Serializable {
+        fun onReload(v: View)
     }
 
-    protected abstract int onCreateView();
+    protected abstract fun onCreateView(): Int
 
     /**
-     * Called immediately after {@link #onCreateView()}
+     * Called immediately after [onCreateView]
      *
      * @since 1.2.2
      */
-    protected void onViewCreate(Context context, View view) {
-    }
+    protected open fun onViewCreate(context: Context, view: View) {}
 
     /**
      * Called when the rootView of Callback is attached to its LoadLayout.
      *
      * @since 1.2.2
      */
-    public void onAttach(Context context, View view) {
+    @Suppress("UNUSED_PARAMETER")
+    open fun onAttach(context: Context, view: View) {
     }
 
     /**
@@ -149,6 +125,5 @@ public abstract class Callback implements Serializable {
      *
      * @since 1.2.2
      */
-    public void onDetach() {
-    }
+    open fun onDetach() {}
 }

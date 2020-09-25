@@ -1,16 +1,10 @@
-package com.kingja.loadsir.core;
+package com.kingja.loadsir.core
 
-import android.content.Context;
-import android.view.View;
+import android.content.Context
+import android.view.View
+import com.kingja.loadsir.callback.Callback
 
-import com.kingja.loadsir.callback.Callback;
+fun interface Transport {
 
-/**
- * Description:TODO
- * Create Time:2017/9/28 6:45
- * Author:KingJA
- * Email:kingjavip@gmail.com
- */
-public interface Transport {
-    void order(Context context, View view, Callback callback);
+    fun order(context: Context, view: View?, callback: Callback)
 }

@@ -1,112 +1,111 @@
-package com.kingja.loadsir.callback;
+package com.kingja.loadsir.callback
 
-import android.content.Context;
-import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.R
+import android.content.Context
+import android.view.Gravity
+import android.view.View
+import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.annotation.StyleRes
 
-import androidx.annotation.StyleRes;
+class ProgressCallback(builder: Builder) : Callback() {
+    private val title: String?
+    private val subTitle: String?
+    private val subTitleStyleRes: Int
+    private val titleStyleRes: Int
 
-/**
- * Description:TODO
- * Create Time:2017/10/9 14:12
- * Author:KingJA
- * Email:kingjavip@gmail.com
- */
-public class ProgressCallback extends Callback {
-    private String title;
-    private String subTitle;
-    private int subTitleStyleRes;
-    private int titleStyleRes;
-
-    private ProgressCallback(Builder builder) {
-        this.title = builder.title;
-        this.subTitle = builder.subTitle;
-        this.subTitleStyleRes = builder.subTitleStyleRes;
-        this.titleStyleRes = builder.titleStyleRes;
-        setSuccessVisible(builder.aboveable);
+    init {
+        title = builder.title
+        subTitle = builder.subTitle
+        subTitleStyleRes = builder.subTitleStyleRes
+        titleStyleRes = builder.titleStyleRes
+        successVisible = builder.isAbove
     }
 
-    @Override
-    protected int onCreateView() {
-        return 0;
+    override fun onCreateView() = 0
+
+    override fun onBuildView(context: Context): View? {
+        return LinearLayout(context)
     }
 
-    @Override
-    protected View onBuildView(Context context) {
-        return new LinearLayout(context);
-    }
+    @Suppress("DEPRECATION")
+    override fun onViewCreate(context: Context, view: View) {
+        val lp = LinearLayout.LayoutParams(-2, -2).apply {
+            gravity = Gravity.CENTER
+        }
+        (view as? LinearLayout)?.apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER
 
-    @Override
-    protected void onViewCreate(Context context, View view) {
-        final LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-2, -2);
-        lp.gravity = Gravity.CENTER;
-        final LinearLayout ll = (LinearLayout) view;
-        ll.setOrientation(LinearLayout.VERTICAL);
-        ll.setGravity(Gravity.CENTER);
+            val progressBar = ProgressBar(context)
+            addView(progressBar, lp)
 
-        final ProgressBar progressBar = new ProgressBar(context);
-        ll.addView(progressBar, lp);
-
-        if (!TextUtils.isEmpty(title)) {
-            final TextView tvTitle = new TextView(context);
-            tvTitle.setText(title);
-            if (titleStyleRes == -1) {
-                tvTitle.setTextAppearance(context, android.R.style.TextAppearance_Large);
-            } else {
-                tvTitle.setTextAppearance(context, titleStyleRes);
+            if (title?.isNotBlank() == true) {
+                TextView(context).apply {
+                    text = title
+                    if (titleStyleRes == -1) {
+                        setTextAppearance(context, R.style.TextAppearance_Large)
+                    } else {
+                        setTextAppearance(context, titleStyleRes)
+                    }
+                    addView(this, lp)
+                }
             }
-            ll.addView(tvTitle, lp);
-        }
-        if (!TextUtils.isEmpty(subTitle)) {
-            final TextView tvSubtitle = new TextView(context);
-            tvSubtitle.setText(subTitle);
-            if (subTitleStyleRes == -1) {
-                tvSubtitle.setTextAppearance(context, android.R.style.TextAppearance_Medium);
-            } else {
-                tvSubtitle.setTextAppearance(context, subTitleStyleRes);
+
+            if (subTitle?.isNotBlank() == true) {
+                TextView(context).apply {
+                    text = subTitle
+                    if (subTitleStyleRes == -1) {
+                        setTextAppearance(context, R.style.TextAppearance_Medium)
+                    } else {
+                        setTextAppearance(context, subTitleStyleRes)
+                    }
+                    addView(this, lp)
+                }
             }
-            ll.addView(tvSubtitle, lp);
         }
     }
 
-    public static class Builder {
-        private String title;
-        private String subTitle;
-        private int subTitleStyleRes = -1;
-        private int titleStyleRes = -1;
-        private boolean aboveable;
+    class Builder {
+        var title: String? = null
+            private set
+        var subTitle: String? = null
+            private set
+        var subTitleStyleRes = -1
+            private set
+        var titleStyleRes = -1
+            private set
+        var isAbove = false
+            private set
 
-        public Builder setTitle(String title) {
-            return setTitle(title, -1);
+        fun setTitle(title: String): Builder {
+            return setTitle(title, -1)
         }
 
-        public Builder setTitle(String title, @StyleRes int titleStyleRes) {
-            this.title = title;
-            this.titleStyleRes = titleStyleRes;
-            return this;
+        fun setTitle(title: String, @StyleRes titleStyleRes: Int): Builder {
+            this.title = title
+            this.titleStyleRes = titleStyleRes
+            return this
         }
 
-        public Builder setSubTitle(String subTitle) {
-            return setSubTitle(subTitle, -1);
+        fun setSubTitle(subTitle: String): Builder {
+            return setSubTitle(subTitle, -1)
         }
 
-        public Builder setSubTitle(String subTitle, @StyleRes int subTitleStyleRes) {
-            this.subTitle = subTitle;
-            this.subTitleStyleRes = subTitleStyleRes;
-            return this;
+        fun setSubTitle(subTitle: String, @StyleRes subTitleStyleRes: Int): Builder {
+            this.subTitle = subTitle
+            this.subTitleStyleRes = subTitleStyleRes
+            return this
         }
 
-        public Builder setAboveSuccess(boolean aboveable) {
-            this.aboveable = aboveable;
-            return this;
+        fun setAboveSuccess(isAbove: Boolean): Builder {
+            this.isAbove = isAbove
+            return this
         }
 
-        public ProgressCallback build() {
-            return new ProgressCallback(this);
+        fun build(): ProgressCallback {
+            return ProgressCallback(this)
         }
     }
 }
