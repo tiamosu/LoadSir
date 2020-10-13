@@ -6,10 +6,6 @@ def localFile = project.rootProject.file("local.properties")
 if (localFile != null && localFile.exists()) {
     properties.load(localFile.newDataInputStream())
 }
-def projectFile = project.file("project.properties")
-if (projectFile != null && projectFile.exists()) {
-    properties.load(projectFile.newDataInputStream())
-}
 
 def projectGitUrl = Publish.gitUrl
 def projectSiteUrl = Publish.website
