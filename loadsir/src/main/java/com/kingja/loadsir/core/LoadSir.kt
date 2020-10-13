@@ -26,7 +26,7 @@ class LoadSir {
     fun <T> register(target: Any,
                      onReloadListener: Callback.OnReloadListener?,
                      convertor: Convertor<T>? = null
-    ): LoadService<*> {
+    ): LoadService<T> {
         val targetContext = LoadSirUtil.getTargetContext(target, builder.getTargetContextList())
         val loadLayout = targetContext.replaceView(target, onReloadListener)
         return LoadService(convertor, loadLayout, builder)
