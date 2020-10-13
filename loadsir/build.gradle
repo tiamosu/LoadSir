@@ -44,4 +44,4 @@ dependencies {
     compileOnly Deps.androidx_appcompat
 }
 
-apply from: 'bintray.gradle'
+apply from: "${rootDir.path}/config_bintray.gradle"
