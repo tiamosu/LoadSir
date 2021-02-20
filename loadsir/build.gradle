@@ -1,7 +1,7 @@
 apply {
     plugin "com.android.library"
     plugin "kotlin-android"
-    plugin "kotlin-android-extensions"
+    plugin "kotlin-parcelize"
     plugin "kotlin-kapt"
 }
 
@@ -13,17 +13,13 @@ android {
         targetSdkVersion Android.targetSdkVersion
         versionCode Android.versionCode
         versionName Android.versionName
+
+        consumerProguardFiles "proguard-rules.pro"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            consumerProguardFiles file('.').listFiles(new FilenameFilter() {
-                @Override
-                boolean accept(File file, String s) {
-                    return s.endsWith('.pro')
-                }
-            })
         }
     }
     lintOptions {
@@ -44,4 +40,4 @@ dependencies {
     compileOnly Deps.androidx_appcompat
 }
 
-apply from: "${rootDir.path}/config_bintray.gradle"
+apply from: "${rootDir.path}/bintray.gradle"
