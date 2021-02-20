@@ -3,7 +3,7 @@
 object Android {
     const val compileSdkVersion = 30
     const val buildToolsVersion = "30.0.3"
-    const val minSdkVersion = 15
+    const val minSdkVersion = 21
     const val targetSdkVersion = 30
 
     const val versionName = "1.0"
@@ -19,7 +19,7 @@ object Versions {
 object Publish {
     const val userOrg = "weixia" //bintray.com用户名
     const val groupId = "me.tiamosu" //jcenter上的路径
-    const val publishVersion = "2.0.5" //版本号
+    const val publishVersion = "2.0.6" //版本号
     const val desc = "Oh hi, this is a nice description for a project, right?"
     const val website = "https://github.com/tiamosu/LoadSir"
     const val gitUrl = "https://github.com/tiamosu/LoadSir.git"
