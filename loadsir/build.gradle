@@ -7,14 +7,13 @@ apply {
 
 android {
     compileSdkVersion Android.compileSdkVersion
-    buildToolsVersion Android.buildToolsVersion
     defaultConfig {
         minSdkVersion Android.minSdkVersion
         targetSdkVersion Android.targetSdkVersion
         versionCode Android.versionCode
         versionName Android.versionName
 
-        consumerProguardFiles "proguard-rules.pro"
+        consumerProguardFiles "consumer-rules.pro"
     }
     buildTypes {
         release {
@@ -40,4 +39,4 @@ dependencies {
     compileOnly Deps.androidx_appcompat
 }
 
-apply from: "${rootDir.path}/bintray.gradle"
+apply from: "${rootDir.path}/config_publish.gradle"
